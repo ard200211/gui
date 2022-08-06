@@ -5,17 +5,40 @@
  */
 package guru;
 
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Arif Rachmat Darmawa
  */
 public class edit_guru extends javax.swing.JFrame {
-
+    static Statement stmt;
+    static Connection conn;
+    static ResultSet resultSet;
     /**
      * Creates new form edit_guru
+     * @param kd_gr
+     * @param nama_gr
+     * @param alamat
+     * @param no_tlp
+     * @throws java.sql.SQLException
      */
-    public edit_guru() {
+    public edit_guru(String kd_gr, String nama_gr, String alamat, String no_tlp) throws SQLException {
         initComponents();
+        kodeGuru.setText(kd_gr);
+        namaGuru.setText(nama_gr);
+        alamatForm.setText(alamat);
+        noTelp.setText(no_tlp);
+    }
+
+    private edit_guru() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -31,16 +54,16 @@ public class edit_guru extends javax.swing.JFrame {
         lbl_editGuru = new javax.swing.JLabel();
         sp_pembatas = new javax.swing.JSeparator();
         lbl_kodeGuru = new javax.swing.JLabel();
-        tf_kodeGuru = new javax.swing.JTextField();
         lbl_namaGuru = new javax.swing.JLabel();
-        tf_namaGuru = new javax.swing.JTextField();
+        namaGuru = new javax.swing.JTextField();
         lbl_alamat = new javax.swing.JLabel();
         lbl_nomorTelepon = new javax.swing.JLabel();
-        tf_nomorTelepon = new javax.swing.JTextField();
+        noTelp = new javax.swing.JTextField();
         btn_editData = new javax.swing.JButton();
         btn_kembali = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        alamatForm = new javax.swing.JTextArea();
+        kodeGuru = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -53,12 +76,10 @@ public class edit_guru extends javax.swing.JFrame {
         lbl_kodeGuru.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_kodeGuru.setText("Kode Guru ( Contoh Penamaan : KDG_001 )");
 
-        tf_kodeGuru.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-
         lbl_namaGuru.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_namaGuru.setText("Nama Guru");
 
-        tf_namaGuru.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        namaGuru.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         lbl_alamat.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_alamat.setText("Alamat");
@@ -66,11 +87,16 @@ public class edit_guru extends javax.swing.JFrame {
         lbl_nomorTelepon.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_nomorTelepon.setText("Nomor Telepon");
 
-        tf_nomorTelepon.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        noTelp.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         btn_editData.setBackground(new java.awt.Color(0, 140, 186));
         btn_editData.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btn_editData.setText("Edit Data");
+        btn_editData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_editDataActionPerformed(evt);
+            }
+        });
 
         btn_kembali.setBackground(new java.awt.Color(244, 67, 54));
         btn_kembali.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -81,9 +107,9 @@ public class edit_guru extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        alamatForm.setColumns(20);
+        alamatForm.setRows(5);
+        jScrollPane1.setViewportView(alamatForm);
 
         javax.swing.GroupLayout pnl_editGuruLayout = new javax.swing.GroupLayout(pnl_editGuru);
         pnl_editGuru.setLayout(pnl_editGuruLayout);
@@ -102,15 +128,17 @@ public class edit_guru extends javax.swing.JFrame {
                                 .addComponent(jScrollPane1)
                                 .addGap(93, 93, 93)))
                         .addGroup(pnl_editGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_nomorTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(noTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_nomorTelepon)))
                     .addGroup(pnl_editGuruLayout.createSequentialGroup()
                         .addGroup(pnl_editGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_kodeGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_kodeGuru))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                            .addComponent(lbl_kodeGuru)
+                            .addGroup(pnl_editGuruLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(kodeGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
                         .addGroup(pnl_editGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_namaGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(namaGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_namaGuru)))
                     .addGroup(pnl_editGuruLayout.createSequentialGroup()
                         .addComponent(lbl_editGuru)
@@ -124,7 +152,7 @@ public class edit_guru extends javax.swing.JFrame {
         pnl_editGuruLayout.setVerticalGroup(
             pnl_editGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_editGuruLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(lbl_editGuru)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(sp_pembatas, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -133,19 +161,20 @@ public class edit_guru extends javax.swing.JFrame {
                     .addComponent(lbl_kodeGuru)
                     .addComponent(lbl_namaGuru))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnl_editGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_kodeGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_namaGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
                 .addGroup(pnl_editGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnl_editGuruLayout.createSequentialGroup()
-                        .addComponent(lbl_alamat)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnl_editGuruLayout.createSequentialGroup()
+                        .addGroup(pnl_editGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(namaGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(kodeGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                         .addComponent(lbl_nomorTelepon)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tf_nomorTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(noTelp, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnl_editGuruLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(lbl_alamat)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(49, 49, 49)
                 .addGroup(pnl_editGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_editData, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -163,7 +192,7 @@ public class edit_guru extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(pnl_editGuru, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 21, Short.MAX_VALUE))
         );
 
         pack();
@@ -176,6 +205,33 @@ public class edit_guru extends javax.swing.JFrame {
         gr.show();
         dispose();
     }//GEN-LAST:event_btn_kembaliActionPerformed
+
+    private void btn_editDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editDataActionPerformed
+        // TODO add your handling code here:
+        Config con = new Config();
+        String query = "UPDATE guru SET nama_guru = ?, alamat = ?, no_tlp = ? WHERE kd_guru = ?";
+        con.dbConnect();
+        
+        try{
+            PreparedStatement psUpdate = Config.conn.prepareStatement(query);
+            psUpdate.setString(1, namaGuru.getText());
+            psUpdate.setString(2, alamatForm.getText());
+            psUpdate.setString(3, noTelp.getText());
+            psUpdate.setString(4, kodeGuru.getText());
+            psUpdate.execute();
+            JOptionPane.showMessageDialog(null, "Data Sukses diupdate");
+            guru gr = new guru();
+            gr.show();
+            dispose();
+        }catch(HeadlessException | SQLException e){
+            JOptionPane.showMessageDialog(null, "Data Gagal diupdate "+e);
+            guru gr = new guru();
+            gr.show();
+            dispose();
+        }
+  
+       
+    }//GEN-LAST:event_btn_editDataActionPerformed
 
     /**
      * @param args the command line arguments
@@ -205,27 +261,25 @@ public class edit_guru extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new edit_guru().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new edit_guru().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea alamatForm;
     private javax.swing.JButton btn_editData;
     private javax.swing.JButton btn_kembali;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JLabel kodeGuru;
     private javax.swing.JLabel lbl_alamat;
     private javax.swing.JLabel lbl_editGuru;
     private javax.swing.JLabel lbl_kodeGuru;
     private javax.swing.JLabel lbl_namaGuru;
     private javax.swing.JLabel lbl_nomorTelepon;
+    private javax.swing.JTextField namaGuru;
+    private javax.swing.JTextField noTelp;
     private javax.swing.JPanel pnl_editGuru;
     private javax.swing.JSeparator sp_pembatas;
-    private javax.swing.JTextField tf_kodeGuru;
-    private javax.swing.JTextField tf_namaGuru;
-    private javax.swing.JTextField tf_nomorTelepon;
     // End of variables declaration//GEN-END:variables
 }

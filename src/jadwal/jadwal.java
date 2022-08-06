@@ -210,24 +210,24 @@ public class jadwal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnViewActionPerformed
     public void table(){
         Config con = new Config();
-        String query = "SELECT * FROM jadwal";
+        String queryJadwal = "SELECT * FROM jadwal";
         con.dbConnect();
         
         try {
             stmt = Config.conn.createStatement();
-            resultSet = stmt.executeQuery(query);
+            resultSet = stmt.executeQuery(queryJadwal);
             int i = 1;
-            while(resultSet.next()){
-                String kd_mapel = resultSet.getString("kd_mapel");
-                String kd_guru = resultSet.getString("nama_guru");
-                String nama_mapel = resultSet.getString("nama_mapel");
-                String hari = resultSet.getString("hari");
-                String jam = resultSet.getString("jam");
-                String columns[] = { String.valueOf(i++),kd_mapel, kd_guru, nama_mapel, hari, jam };
-                
-                DefaultTableModel tblModel = (DefaultTableModel)tbl_jadwal.getModel();
-                tblModel.addRow(columns);     
-            }            
+                while(resultSet.next()){
+                    String kd_mapel = resultSet.getString("kd_mapel");
+                    String kd_guru = resultSet.getString("kd_guru");
+                    String nama_mapel = resultSet.getString("nama_mapel");
+                    String hari = resultSet.getString("hari");
+                    String jam = resultSet.getString("jam");
+                    String columns[] = { String.valueOf(i++), kd_mapel, kd_guru, nama_mapel, hari, jam };
+
+                    DefaultTableModel tblModel = (DefaultTableModel)tbl_jadwal.getModel();
+                    tblModel.addRow(columns);     
+                }            
         }catch(SQLException e){
             System.out.println("Masalah Terdapat pada QUERY / WEB SERVER");
         }

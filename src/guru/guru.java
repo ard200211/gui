@@ -6,9 +6,13 @@
 package guru;
 import dashboard.*;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 /**
  *
@@ -39,8 +43,8 @@ public class guru extends javax.swing.JFrame {
         lbl_guru = new javax.swing.JLabel();
         sp_pembatas = new javax.swing.JSeparator();
         btn_tambah = new javax.swing.JButton();
-        btn_edit = new javax.swing.JButton();
-        btn_hapus = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_guru = new javax.swing.JTable();
         btn_kembali = new javax.swing.JButton();
@@ -69,20 +73,25 @@ public class guru extends javax.swing.JFrame {
             }
         });
 
-        btn_edit.setBackground(new java.awt.Color(76, 175, 80));
-        btn_edit.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btn_edit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_edit.png"))); // NOI18N
-        btn_edit.setText(" Edit Data");
-        btn_edit.addActionListener(new java.awt.event.ActionListener() {
+        btnEdit.setBackground(new java.awt.Color(76, 175, 80));
+        btnEdit.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        btnEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_edit.png"))); // NOI18N
+        btnEdit.setText(" Edit Data");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_editActionPerformed(evt);
+                btnEditActionPerformed(evt);
             }
         });
 
-        btn_hapus.setBackground(new java.awt.Color(244, 67, 54));
-        btn_hapus.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btn_hapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_hapus.png"))); // NOI18N
-        btn_hapus.setText(" Hapus Data");
+        btnHapus.setBackground(new java.awt.Color(244, 67, 54));
+        btnHapus.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        btnHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_hapus.png"))); // NOI18N
+        btnHapus.setText(" Hapus Data");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
 
         tbl_guru.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         tbl_guru.setModel(new javax.swing.table.DefaultTableModel(
@@ -99,6 +108,11 @@ public class guru extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tbl_guru.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_guruMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tbl_guru);
@@ -141,9 +155,9 @@ public class guru extends javax.swing.JFrame {
                                     .addGap(18, 18, 18)
                                     .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(18, 18, 18)
-                                    .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 996, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btn_kembali, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(57, Short.MAX_VALUE))
@@ -157,9 +171,9 @@ public class guru extends javax.swing.JFrame {
                 .addComponent(sp_pembatas, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(pnl_guruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_tambah, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -198,17 +212,55 @@ public class guru extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btn_kembaliActionPerformed
 
-    private void btn_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editActionPerformed
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
-        edit_guru eg = new edit_guru();
-        eg.show();
-        
+        edit_guru eg = null;
+        try {
+            String kd_gr = tbl_guru.getValueAt(tbl_guru.getSelectedRow(),1).toString();
+            String nama_gr = tbl_guru.getValueAt(tbl_guru.getSelectedRow(),2).toString();
+            String alamat = tbl_guru.getValueAt(tbl_guru.getSelectedRow(),3).toString();
+            String no_tlp = tbl_guru.getValueAt(tbl_guru.getSelectedRow(),4).toString();
+            eg = new edit_guru(kd_gr, nama_gr, alamat, no_tlp);
+        } catch (SQLException ex) {
+            Logger.getLogger(guru.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        eg.show();        
         dispose();
-    }//GEN-LAST:event_btn_editActionPerformed
+    }//GEN-LAST:event_btnEditActionPerformed
 
     private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
         table();
     }//GEN-LAST:event_btnViewActionPerformed
+
+    private void tbl_guruMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_guruMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbl_guruMouseClicked
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+        String kd_gr = tbl_guru.getValueAt(tbl_guru.getSelectedRow(),1).toString();
+        System.out.println(kd_gr);
+        String sqlDelete = "DELETE FROM guru WHERE kd_guru = ?";
+        Config con = new Config();
+        con.dbConnect();
+        
+        try{
+            PreparedStatement psDelete = Config.conn.prepareStatement(sqlDelete);
+            psDelete.setString(1, kd_gr);
+            psDelete.execute();
+            JOptionPane.showMessageDialog(null, "Data Sukses dihapus");
+            guru gr = new guru();
+            gr.show();
+            dispose();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Data Gagal dihapus");
+            guru gr = new guru();
+            gr.show();
+            dispose();
+        }
+        
+        
+    }//GEN-LAST:event_btnHapusActionPerformed
     
     public void table(){
         Config con = new Config();
@@ -269,9 +321,9 @@ public class guru extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnView;
-    private javax.swing.JButton btn_edit;
-    private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_hapus1;
     private javax.swing.JButton btn_kembali;
     private javax.swing.JButton btn_tambah;

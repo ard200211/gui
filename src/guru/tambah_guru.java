@@ -5,18 +5,28 @@
  */
 package guru;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Arif Rachmat Darmawa
  */
 public class tambah_guru extends javax.swing.JFrame {
-
+    static Statement stmt;
+    static Connection conn;
+    static ResultSet resultSet;
     /**
      * Creates new form tambah_guru
      */
     public tambah_guru() {
         initComponents();
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -31,15 +41,15 @@ public class tambah_guru extends javax.swing.JFrame {
         lbl_tambahGuru = new javax.swing.JLabel();
         sp_pembatas = new javax.swing.JSeparator();
         lbl_kodeGuru = new javax.swing.JLabel();
-        tf_kodeGuru = new javax.swing.JTextField();
+        kdGuru = new javax.swing.JTextField();
         lbl_namaGuru = new javax.swing.JLabel();
-        tf_namaGuru = new javax.swing.JTextField();
+        namaGuru = new javax.swing.JTextField();
         lbl_alamat = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        ta_alamat = new javax.swing.JTextArea();
+        alamat = new javax.swing.JTextArea();
         lbl_nomorTelepon = new javax.swing.JLabel();
-        tf_nomorTelepon = new javax.swing.JTextField();
-        btn_tambahData = new javax.swing.JButton();
+        nomorTelepon = new javax.swing.JTextField();
+        btnTambah = new javax.swing.JButton();
         btn_kembali = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -53,28 +63,33 @@ public class tambah_guru extends javax.swing.JFrame {
         lbl_kodeGuru.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_kodeGuru.setText("Kode Guru ( Contoh Penamaan : KDG_001 )");
 
-        tf_kodeGuru.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        kdGuru.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         lbl_namaGuru.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_namaGuru.setText("Nama Guru");
 
-        tf_namaGuru.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        namaGuru.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         lbl_alamat.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_alamat.setText("Alamat");
 
-        ta_alamat.setColumns(20);
-        ta_alamat.setRows(5);
-        jScrollPane1.setViewportView(ta_alamat);
+        alamat.setColumns(20);
+        alamat.setRows(5);
+        jScrollPane1.setViewportView(alamat);
 
         lbl_nomorTelepon.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_nomorTelepon.setText("Nomor Telepon");
 
-        tf_nomorTelepon.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        nomorTelepon.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        btn_tambahData.setBackground(new java.awt.Color(0, 140, 186));
-        btn_tambahData.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btn_tambahData.setText("Edit Data");
+        btnTambah.setBackground(new java.awt.Color(0, 140, 186));
+        btnTambah.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        btnTambah.setText("Tambah Data");
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahActionPerformed(evt);
+            }
+        });
 
         btn_kembali.setBackground(new java.awt.Color(244, 67, 54));
         btn_kembali.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -102,21 +117,21 @@ public class tambah_guru extends javax.swing.JFrame {
                                 .addComponent(jScrollPane1)
                                 .addGap(93, 93, 93)))
                         .addGroup(pnl_tambahGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_nomorTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nomorTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_nomorTelepon)))
                     .addGroup(pnl_tambahGuruLayout.createSequentialGroup()
                         .addGroup(pnl_tambahGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_kodeGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(kdGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_kodeGuru))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
                         .addGroup(pnl_tambahGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_namaGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(namaGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_namaGuru)))
                     .addGroup(pnl_tambahGuruLayout.createSequentialGroup()
                         .addComponent(lbl_tambahGuru)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(pnl_tambahGuruLayout.createSequentialGroup()
-                        .addComponent(btn_tambahData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnTambah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(93, 93, 93)
                         .addComponent(btn_kembali, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -134,8 +149,8 @@ public class tambah_guru extends javax.swing.JFrame {
                     .addComponent(lbl_namaGuru))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_tambahGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_kodeGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_namaGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(kdGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(namaGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
                 .addGroup(pnl_tambahGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnl_tambahGuruLayout.createSequentialGroup()
@@ -145,10 +160,10 @@ public class tambah_guru extends javax.swing.JFrame {
                     .addGroup(pnl_tambahGuruLayout.createSequentialGroup()
                         .addComponent(lbl_nomorTelepon)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tf_nomorTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(nomorTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(49, 49, 49)
                 .addGroup(pnl_tambahGuruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_tambahData, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnTambah, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_kembali, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(65, 65, 65))
         );
@@ -174,6 +189,38 @@ public class tambah_guru extends javax.swing.JFrame {
         gr.show();
         dispose();
     }//GEN-LAST:event_btn_kembaliActionPerformed
+
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
+        // TODO add your handling code here:
+        
+        Config con = new Config();
+        con.dbConnect();
+        
+        String sqlInsert = "INSERT INTO guru (kd_guru, nama_guru, alamat, no_tlp) VALUES (?,?,?,?)";
+        
+        try{
+            PreparedStatement ps;
+            ps = Config.conn.prepareStatement(sqlInsert);
+            ps.setString(1, kdGuru.getText());
+            ps.setString(2, namaGuru.getText());
+            ps.setString(3, alamat.getText());
+            ps.setString(4, nomorTelepon.getText());
+            ps.execute();
+            ps.close();
+            JOptionPane.showMessageDialog(null, "Sukses Insert Data Guru");
+            guru gr = new guru();
+            gr.show();
+            dispose();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Gagal Insert Data Guru"+e.getMessage());
+            guru gr = new guru();
+            gr.show();
+            dispose();
+        }
+        
+        
+        
+    }//GEN-LAST:event_btnTambahActionPerformed
 
     /**
      * @param args the command line arguments
@@ -211,19 +258,19 @@ public class tambah_guru extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea alamat;
+    private javax.swing.JButton btnTambah;
     private javax.swing.JButton btn_kembali;
-    private javax.swing.JButton btn_tambahData;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField kdGuru;
     private javax.swing.JLabel lbl_alamat;
     private javax.swing.JLabel lbl_kodeGuru;
     private javax.swing.JLabel lbl_namaGuru;
     private javax.swing.JLabel lbl_nomorTelepon;
     private javax.swing.JLabel lbl_tambahGuru;
+    private javax.swing.JTextField namaGuru;
+    private javax.swing.JTextField nomorTelepon;
     private javax.swing.JPanel pnl_tambahGuru;
     private javax.swing.JSeparator sp_pembatas;
-    private javax.swing.JTextArea ta_alamat;
-    private javax.swing.JTextField tf_kodeGuru;
-    private javax.swing.JTextField tf_namaGuru;
-    private javax.swing.JTextField tf_nomorTelepon;
     // End of variables declaration//GEN-END:variables
 }
