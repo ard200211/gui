@@ -5,17 +5,42 @@
  */
 package jadwal;
 
+import guru.guru;
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Arif Rachmat Darmawa
  */
 public class edit_jadwal extends javax.swing.JFrame {
-
+    static Statement stmt;
+    static Connection conn;
+    static ResultSet resultSet;
     /**
      * Creates new form edit_jadwal
+     * @param kd_mapel
+     * @param kd_guru
+     * @param nama_mapel
+     * @param hari
+     * @param jam
      */
-    public edit_jadwal() {
+    public edit_jadwal(String kd_mapel, String kd_guru, String nama_mapel, String harihari, String jamjam) {
         initComponents();
+        kodeMapel.setText(kd_mapel);
+        namaGuru.setText(kd_guru);
+        namaMapel.setText(nama_mapel);
+        hari.setText(harihari);
+        jam.setText(jamjam);
+    }
+
+    private edit_jadwal() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -31,17 +56,17 @@ public class edit_jadwal extends javax.swing.JFrame {
         lbl_editJadwal = new javax.swing.JLabel();
         sp_pembatas = new javax.swing.JSeparator();
         lbl_kodeMapel = new javax.swing.JLabel();
-        tf_kodeMapel = new javax.swing.JTextField();
         lbl_namaGuru = new javax.swing.JLabel();
-        cmb_namaGuru = new javax.swing.JComboBox<>();
         lbl_namaMapel = new javax.swing.JLabel();
-        tf_namaMapel = new javax.swing.JTextField();
+        namaMapel = new javax.swing.JTextField();
         lbl_hari = new javax.swing.JLabel();
-        tf_hari = new javax.swing.JTextField();
+        hari = new javax.swing.JTextField();
         lbl_jam = new javax.swing.JLabel();
-        tf_jam = new javax.swing.JTextField();
-        btn_editData = new javax.swing.JButton();
+        jam = new javax.swing.JTextField();
+        editData = new javax.swing.JButton();
         btn_kembali = new javax.swing.JButton();
+        kodeMapel = new javax.swing.JLabel();
+        namaGuru = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,42 +79,37 @@ public class edit_jadwal extends javax.swing.JFrame {
         lbl_kodeMapel.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_kodeMapel.setText("Kode Mata Pelajaran ( Contoh Penamaan : KDM_001 )");
 
-        tf_kodeMapel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-
         lbl_namaGuru.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_namaGuru.setText("Nama Guru");
-
-        cmb_namaGuru.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        cmb_namaGuru.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Nita Moha, S.Pd", "Acep Surecep, S.Pd", "Anang Dinata, S.Pd", "Bagus Sudrajat, S.Pd" }));
-        cmb_namaGuru.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmb_namaGuruActionPerformed(evt);
-            }
-        });
 
         lbl_namaMapel.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_namaMapel.setText("Nama Mata Pelajaran");
 
-        tf_namaMapel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        tf_namaMapel.addActionListener(new java.awt.event.ActionListener() {
+        namaMapel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        namaMapel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tf_namaMapelActionPerformed(evt);
+                namaMapelActionPerformed(evt);
             }
         });
 
         lbl_hari.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_hari.setText("Hari");
 
-        tf_hari.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        hari.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         lbl_jam.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_jam.setText("Jam");
 
-        tf_jam.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jam.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        btn_editData.setBackground(new java.awt.Color(0, 140, 186));
-        btn_editData.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btn_editData.setText("Edit Data");
+        editData.setBackground(new java.awt.Color(0, 140, 186));
+        editData.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        editData.setText("Edit Data");
+        editData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editDataActionPerformed(evt);
+            }
+        });
 
         btn_kembali.setBackground(new java.awt.Color(244, 67, 54));
         btn_kembali.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -109,34 +129,34 @@ public class edit_jadwal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnl_editJadwalLayout.createSequentialGroup()
-                        .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_kodeMapel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_editJadwal)
-                            .addComponent(lbl_kodeMapel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
                         .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lbl_editJadwal)
+                            .addComponent(lbl_kodeMapel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(kodeMapel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
+                        .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnl_editJadwalLayout.createSequentialGroup()
                                 .addComponent(lbl_namaGuru)
                                 .addGap(397, 397, 397))
-                            .addComponent(cmb_namaGuru, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(namaGuru, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(pnl_editJadwalLayout.createSequentialGroup()
                         .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnl_editJadwalLayout.createSequentialGroup()
                                 .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btn_editData, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(editData, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lbl_namaMapel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(pnl_editJadwalLayout.createSequentialGroup()
-                                .addComponent(tf_namaMapel)
+                                .addComponent(namaMapel)
                                 .addGap(93, 93, 93)))
                         .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tf_hari)
+                            .addComponent(hari)
                             .addComponent(lbl_hari)
                             .addComponent(btn_kembali, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)))
                     .addGroup(pnl_editJadwalLayout.createSequentialGroup()
                         .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_jam)
-                            .addComponent(tf_jam, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jam, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -153,27 +173,30 @@ public class edit_jadwal extends javax.swing.JFrame {
                     .addComponent(lbl_namaGuru))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cmb_namaGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_kodeMapel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnl_editJadwalLayout.createSequentialGroup()
-                        .addComponent(lbl_hari)
+                        .addComponent(kodeMapel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnl_editJadwalLayout.createSequentialGroup()
+                                .addComponent(lbl_hari)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(hari, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnl_editJadwalLayout.createSequentialGroup()
+                                .addComponent(lbl_namaMapel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(namaMapel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addComponent(lbl_jam)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tf_hari, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jam, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                        .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(editData, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_kembali, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27))
                     .addGroup(pnl_editJadwalLayout.createSequentialGroup()
-                        .addComponent(lbl_namaMapel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tf_namaMapel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(lbl_jam)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tf_jam, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                .addGroup(pnl_editJadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_editData, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_kembali, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27))
+                        .addComponent(namaGuru, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -200,13 +223,34 @@ public class edit_jadwal extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btn_kembaliActionPerformed
 
-    private void cmb_namaGuruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmb_namaGuruActionPerformed
+    private void namaMapelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namaMapelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cmb_namaGuruActionPerformed
+    }//GEN-LAST:event_namaMapelActionPerformed
 
-    private void tf_namaMapelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_namaMapelActionPerformed
+    private void editDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editDataActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tf_namaMapelActionPerformed
+        Config con = new Config();
+        String query = "UPDATE jadwal SET nama_mapel = ?, hari = ?, jam = ? WHERE kd_mapel = ?";
+        con.dbConnect();
+        
+        try{
+            PreparedStatement psUpdate = Config.conn.prepareStatement(query);
+            psUpdate.setString(1, namaMapel.getText());
+            psUpdate.setString(2, hari.getText());
+            psUpdate.setString(3, jam.getText());
+            psUpdate.setString(4, kodeMapel.getText());
+            psUpdate.execute();
+            JOptionPane.showMessageDialog(null, "Data Sukses diupdate");
+            jadwal gr = new jadwal();
+            gr.show();
+            dispose();
+        }catch(HeadlessException | SQLException e){
+            JOptionPane.showMessageDialog(null, "Data Gagal diupdate "+e);
+            jadwal gr = new jadwal();
+            gr.show();
+            dispose();
+        }
+    }//GEN-LAST:event_editDataActionPerformed
 
     /**
      * @param args the command line arguments
@@ -236,28 +280,26 @@ public class edit_jadwal extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new edit_jadwal().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new edit_jadwal().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_editData;
     private javax.swing.JButton btn_kembali;
-    private javax.swing.JComboBox<String> cmb_namaGuru;
+    private javax.swing.JButton editData;
+    private javax.swing.JTextField hari;
+    private javax.swing.JTextField jam;
+    private javax.swing.JLabel kodeMapel;
     private javax.swing.JLabel lbl_editJadwal;
     private javax.swing.JLabel lbl_hari;
     private javax.swing.JLabel lbl_jam;
     private javax.swing.JLabel lbl_kodeMapel;
     private javax.swing.JLabel lbl_namaGuru;
     private javax.swing.JLabel lbl_namaMapel;
+    private javax.swing.JLabel namaGuru;
+    private javax.swing.JTextField namaMapel;
     private javax.swing.JPanel pnl_editJadwal;
     private javax.swing.JSeparator sp_pembatas;
-    private javax.swing.JTextField tf_hari;
-    private javax.swing.JTextField tf_jam;
-    private javax.swing.JTextField tf_kodeMapel;
-    private javax.swing.JTextField tf_namaMapel;
     // End of variables declaration//GEN-END:variables
 }

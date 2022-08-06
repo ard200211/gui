@@ -6,10 +6,13 @@
 package jadwal;
 
 import dashboard.dashboard;
+import guru.guru;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -41,7 +44,7 @@ public class jadwal extends javax.swing.JFrame {
         sp_pembatas = new javax.swing.JSeparator();
         btn_tambah = new javax.swing.JButton();
         btn_edit = new javax.swing.JButton();
-        btn_hapus = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_jadwal = new javax.swing.JTable();
         btn_kembali = new javax.swing.JButton();
@@ -76,10 +79,15 @@ public class jadwal extends javax.swing.JFrame {
             }
         });
 
-        btn_hapus.setBackground(new java.awt.Color(244, 67, 54));
-        btn_hapus.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btn_hapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_hapus.png"))); // NOI18N
-        btn_hapus.setText(" Hapus Data");
+        btnHapus.setBackground(new java.awt.Color(244, 67, 54));
+        btnHapus.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        btnHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_hapus.png"))); // NOI18N
+        btnHapus.setText(" Hapus Data");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
 
         tbl_jadwal.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         tbl_jadwal.setModel(new javax.swing.table.DefaultTableModel(
@@ -140,7 +148,7 @@ public class jadwal extends javax.swing.JFrame {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(18, 18, 18)
-                                    .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 996, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btn_kembali, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(58, Short.MAX_VALUE))
@@ -156,7 +164,7 @@ public class jadwal extends javax.swing.JFrame {
                 .addGroup(pnl_jadwalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_tambah, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -198,9 +206,13 @@ public class jadwal extends javax.swing.JFrame {
 
     private void btn_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editActionPerformed
         // TODO add your handling code here:
-        edit_jadwal ej = new edit_jadwal();
+        String kodeMapel = tbl_jadwal.getValueAt(tbl_jadwal.getSelectedRow(),1).toString();
+        String kodeGuru = tbl_jadwal.getValueAt(tbl_jadwal.getSelectedRow(),2).toString();
+        String namaMapel = tbl_jadwal.getValueAt(tbl_jadwal.getSelectedRow(),3).toString();
+        String hari = tbl_jadwal.getValueAt(tbl_jadwal.getSelectedRow(),4).toString();
+        String jam = tbl_jadwal.getValueAt(tbl_jadwal.getSelectedRow(),5).toString();
+        edit_jadwal ej = new edit_jadwal(kodeMapel, kodeGuru, namaMapel, hari, jam);
         ej.show();
-
         dispose();
     }//GEN-LAST:event_btn_editActionPerformed
 
@@ -208,6 +220,30 @@ public class jadwal extends javax.swing.JFrame {
         // TODO add your handling code here:
         table();
     }//GEN-LAST:event_btnViewActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+
+        String kd_gr = tbl_jadwal.getValueAt(tbl_jadwal.getSelectedRow(),1).toString();
+        System.out.println(kd_gr);
+        String sqlDelete = "DELETE FROM jadwal WHERE kd_mapel = ?";
+        Config con = new Config();
+        con.dbConnect();
+        
+        try{
+            PreparedStatement psDelete = Config.conn.prepareStatement(sqlDelete);
+            psDelete.setString(1, kd_gr);
+            psDelete.execute();
+            JOptionPane.showMessageDialog(null, "Data Sukses dihapus");
+            guru gr = new guru();
+            gr.show();
+            dispose();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Data Gagal dihapus");
+            guru gr = new guru();
+            gr.show();
+            dispose();
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
     public void table(){
         Config con = new Config();
         String queryJadwal = "SELECT * FROM jadwal";
@@ -268,9 +304,9 @@ public class jadwal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnView;
     private javax.swing.JButton btn_edit;
-    private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_kembali;
     private javax.swing.JButton btn_tambah;
     private javax.swing.JScrollPane jScrollPane1;
