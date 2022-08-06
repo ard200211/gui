@@ -5,6 +5,10 @@
  */
 package rapot;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Arif Rachmat Darmawa
@@ -31,16 +35,16 @@ public class tambah_rapot extends javax.swing.JFrame {
         lbl_tambahRapot = new javax.swing.JLabel();
         sp_pembatas = new javax.swing.JSeparator();
         nis = new javax.swing.JLabel();
-        tf_nis = new javax.swing.JTextField();
+        nisSiswa = new javax.swing.JTextField();
         lbl_namaMapel = new javax.swing.JLabel();
-        tf_namaMapel = new javax.swing.JTextField();
+        namaMapel = new javax.swing.JTextField();
         lbl_tahunAkademik = new javax.swing.JLabel();
-        tf_tahunAkademik = new javax.swing.JTextField();
+        tahunAkademik = new javax.swing.JTextField();
         lbl_semester = new javax.swing.JLabel();
-        tf_semester = new javax.swing.JTextField();
+        semester = new javax.swing.JTextField();
         lbl_nilai = new javax.swing.JLabel();
-        tf_nilai = new javax.swing.JTextField();
-        btn_tambahData = new javax.swing.JButton();
+        nilai = new javax.swing.JTextField();
+        tambahData = new javax.swing.JButton();
         btn_kembali = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -54,36 +58,41 @@ public class tambah_rapot extends javax.swing.JFrame {
         nis.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         nis.setText("NIS");
 
-        tf_nis.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        nisSiswa.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         lbl_namaMapel.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
-        lbl_namaMapel.setText("Mata Pelajaran");
+        lbl_namaMapel.setText("Kode Mapel");
 
-        tf_namaMapel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        tf_namaMapel.addActionListener(new java.awt.event.ActionListener() {
+        namaMapel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        namaMapel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tf_namaMapelActionPerformed(evt);
+                namaMapelActionPerformed(evt);
             }
         });
 
         lbl_tahunAkademik.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_tahunAkademik.setText("Tahun Akademik");
 
-        tf_tahunAkademik.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        tahunAkademik.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         lbl_semester.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_semester.setText("Semester");
 
-        tf_semester.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        semester.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         lbl_nilai.setFont(new java.awt.Font("Verdana", 0, 18)); // NOI18N
         lbl_nilai.setText("Nilai");
 
-        tf_nilai.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        nilai.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
-        btn_tambahData.setBackground(new java.awt.Color(0, 140, 186));
-        btn_tambahData.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        btn_tambahData.setText("Tambah Data");
+        tambahData.setBackground(new java.awt.Color(0, 140, 186));
+        tambahData.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        tambahData.setText("Tambah Data");
+        tambahData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tambahDataActionPerformed(evt);
+            }
+        });
 
         btn_kembali.setBackground(new java.awt.Color(244, 67, 54));
         btn_kembali.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -104,26 +113,26 @@ public class tambah_rapot extends javax.swing.JFrame {
                 .addGroup(pnl_tambahRapotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnl_tambahRapotLayout.createSequentialGroup()
                         .addGroup(pnl_tambahRapotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_nis, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nisSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(nis))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                         .addGroup(pnl_tambahRapotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_namaMapel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(namaMapel, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_namaMapel)))
                     .addGroup(pnl_tambahRapotLayout.createSequentialGroup()
-                        .addComponent(btn_tambahData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tambahData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(93, 93, 93)
                         .addComponent(btn_kembali, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnl_tambahRapotLayout.createSequentialGroup()
                         .addGroup(pnl_tambahRapotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbl_tahunAkademik)
                             .addComponent(lbl_tambahRapot)
-                            .addComponent(tf_nilai, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tf_tahunAkademik, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nilai, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tahunAkademik, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_nilai))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(pnl_tambahRapotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tf_semester, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(semester, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbl_semester))))
                 .addContainerGap())
         );
@@ -140,25 +149,25 @@ public class tambah_rapot extends javax.swing.JFrame {
                     .addComponent(lbl_namaMapel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnl_tambahRapotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_nis, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_namaMapel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nisSiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(namaMapel, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnl_tambahRapotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnl_tambahRapotLayout.createSequentialGroup()
                         .addComponent(lbl_tahunAkademik)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tf_tahunAkademik, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(tahunAkademik, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnl_tambahRapotLayout.createSequentialGroup()
                         .addComponent(lbl_semester)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tf_semester, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(semester, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(lbl_nilai)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tf_nilai, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(nilai, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
                 .addGroup(pnl_tambahRapotLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_tambahData, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tambahData, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_kembali, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(46, 46, 46))
         );
@@ -187,9 +196,39 @@ public class tambah_rapot extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btn_kembaliActionPerformed
 
-    private void tf_namaMapelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tf_namaMapelActionPerformed
+    private void tambahDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tambahDataActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_tf_namaMapelActionPerformed
+        Config con = new Config();
+        con.dbConnect();
+        
+        String sqlInsert = "INSERT INTO rapot (nis, kd_mapel, tahun_akademik, semester, nilai) VALUES (?,?,?,?,?)";
+            
+        try{
+            PreparedStatement ps;
+            ps = Config.conn.prepareStatement(sqlInsert);
+            ps.setString(1, nisSiswa.getText());
+            ps.setString(2, namaMapel.getText());
+            ps.setString(3, tahunAkademik.getText());
+            ps.setString(4, semester.getText());
+            ps.setString(5, nilai.getText());
+            ps.execute();
+            ps.close();
+            JOptionPane.showMessageDialog(null, "Sukses Insert Data Jadwal");
+            rapot gr = new rapot();
+            gr.show();
+            dispose();
+        }catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Gagal Insert Data Jadwal "+e.getMessage());
+            rapot gr = new rapot();
+            gr.show();
+            dispose();
+        }
+        
+    }//GEN-LAST:event_tambahDataActionPerformed
+
+    private void namaMapelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namaMapelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_namaMapelActionPerformed
 
     /**
      * @param args the command line arguments
@@ -228,19 +267,19 @@ public class tambah_rapot extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_kembali;
-    private javax.swing.JButton btn_tambahData;
     private javax.swing.JLabel lbl_namaMapel;
     private javax.swing.JLabel lbl_nilai;
     private javax.swing.JLabel lbl_semester;
     private javax.swing.JLabel lbl_tahunAkademik;
     private javax.swing.JLabel lbl_tambahRapot;
+    private javax.swing.JTextField namaMapel;
+    private javax.swing.JTextField nilai;
     private javax.swing.JLabel nis;
+    private javax.swing.JTextField nisSiswa;
     private javax.swing.JPanel pnl_tambahRapot;
+    private javax.swing.JTextField semester;
     private javax.swing.JSeparator sp_pembatas;
-    private javax.swing.JTextField tf_namaMapel;
-    private javax.swing.JTextField tf_nilai;
-    private javax.swing.JTextField tf_nis;
-    private javax.swing.JTextField tf_semester;
-    private javax.swing.JTextField tf_tahunAkademik;
+    private javax.swing.JTextField tahunAkademik;
+    private javax.swing.JButton tambahData;
     // End of variables declaration//GEN-END:variables
 }

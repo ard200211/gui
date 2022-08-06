@@ -258,7 +258,7 @@ public class jadwal extends javax.swing.JFrame {
                     String kd_guru = resultSet.getString("kd_guru");
                     String nama_mapel = resultSet.getString("nama_mapel");
                     String hari = resultSet.getString("hari");
-                    String jam = resultSet.getString("jam");
+                    String jam   = resultSet.getString("jam");
                     String columns[] = { String.valueOf(i++), kd_mapel, kd_guru, nama_mapel, hari, jam };
 
                     DefaultTableModel tblModel = (DefaultTableModel)tbl_jadwal.getModel();

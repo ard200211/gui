@@ -6,18 +6,74 @@
 package rapot;
 
 import dashboard.dashboard;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
  * @author Arif Rachmat Darmawa
  */
 public class rapot extends javax.swing.JFrame {
+    static Statement stmt;
+    static Connection conn;
+    static ResultSet resultSet;
+    static final String db_url = "jdbc:mysql://localhost/db10120235sekolah";
+    static final String username = "root";
+    static final String password = "";
+    static final String classDriver = "com.mysql.jdbc.Driver";
+    
+    static Connection conns;
+    static Statement stmtt;
+    static boolean isConnected;
 
+    JasperReport JasRep;
+    JasperPrint JasPri;
+    Map param = new HashMap();
+    JasperDesign JasDes;
+    
+    public void dbConnect(){
+        try {
+            Class.forName(classDriver);
+            conn = DriverManager.getConnection(db_url,username,password);
+            isConnected = true;
+        } catch (ClassNotFoundException | SQLException e) {
+            isConnected = false;
+        }
+        }
     /**
      * Creates new form rapot
      */
     public rapot() {
         initComponents();
+        Config koneksi = new Config();
+        try
+        {
+            File file = new File("src\\ReportAnggota.jrxml");
+            JasDes = JRXmlLoader.load(file);
+            param.clear();
+            JasRep = JasperCompileManager.compileReport(JasDes);
+            JasPri=JasperFillManager.fillReport(JasRep, param, koneksi.dbConnect());
+            JasperViewer.viewReport(JasPri, false);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -33,11 +89,12 @@ public class rapot extends javax.swing.JFrame {
         lbl_murid = new javax.swing.JLabel();
         sp_pembatas = new javax.swing.JSeparator();
         btn_tambah = new javax.swing.JButton();
-        btn_edit = new javax.swing.JButton();
         btn_hapus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_rapot = new javax.swing.JTable();
         btn_kembali = new javax.swing.JButton();
+        showData = new javax.swing.JButton();
+        btnCetak = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -58,16 +115,6 @@ public class rapot extends javax.swing.JFrame {
             }
         });
 
-        btn_edit.setBackground(new java.awt.Color(76, 175, 80));
-        btn_edit.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btn_edit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_edit.png"))); // NOI18N
-        btn_edit.setText(" Edit Data");
-        btn_edit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_editActionPerformed(evt);
-            }
-        });
-
         btn_hapus.setBackground(new java.awt.Color(244, 67, 54));
         btn_hapus.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         btn_hapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_hapus.png"))); // NOI18N
@@ -76,9 +123,7 @@ public class rapot extends javax.swing.JFrame {
         tbl_rapot.setFont(new java.awt.Font("Verdana", 0, 14)); // NOI18N
         tbl_rapot.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "No", "Mata Pelajaran", "Tahun Akademik", "Semester", "Nilai"
@@ -103,6 +148,23 @@ public class rapot extends javax.swing.JFrame {
             }
         });
 
+        showData.setBackground(new java.awt.Color(76, 175, 80));
+        showData.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        showData.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_edit.png"))); // NOI18N
+        showData.setText(" Show Data");
+        showData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showDataActionPerformed(evt);
+            }
+        });
+
+        btnCetak.setText("cetak");
+        btnCetak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnl_muridLayout = new javax.swing.GroupLayout(pnl_murid);
         pnl_murid.setLayout(pnl_muridLayout);
         pnl_muridLayout.setHorizontalGroup(
@@ -119,9 +181,11 @@ public class rapot extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_muridLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(pnl_muridLayout.createSequentialGroup()
                                     .addComponent(btn_tambah)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(showData, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
+                                    .addComponent(btnCetak)
+                                    .addGap(40, 40, 40)
                                     .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 996, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btn_kembali, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -136,9 +200,10 @@ public class rapot extends javax.swing.JFrame {
                 .addComponent(sp_pembatas, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(pnl_muridLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_tambah, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(showData, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCetak))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -169,14 +234,6 @@ public class rapot extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btn_tambahActionPerformed
 
-    private void btn_editActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editActionPerformed
-        // TODO add your handling code here:
-        edit_rapot em = new edit_rapot();
-        em.show();
-
-        dispose();
-    }//GEN-LAST:event_btn_editActionPerformed
-
     private void btn_kembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_kembaliActionPerformed
         dashboard dabo = new dashboard();
         dabo.show();
@@ -184,6 +241,54 @@ public class rapot extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btn_kembaliActionPerformed
 
+    private void showDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showDataActionPerformed
+        // TODO add your handling code here:
+        table();
+    }//GEN-LAST:event_showDataActionPerformed
+
+    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
+        // TODO add your handling code here:
+        Config con = new Config();
+        try
+        {
+            File file = new File("src\\ReportAnggota.jrxml");
+            JasDes = JRXmlLoader.load(file);
+            param.clear();
+            JasRep = JasperCompileManager.compileReport(JasDes);
+            JasPri = JasperFillManager.fillReport(JasRep, param, con.dbConnect());
+            JasperViewer.viewReport(JasPri, false);
+        }
+        catch(JRException e)
+        {
+            
+        }
+    }//GEN-LAST:event_btnCetakActionPerformed
+
+    public void table(){
+        Config con = new Config();
+        String queryJadwal = "SELECT * FROM rapot";
+        con.dbConnect();
+        
+        try {
+            stmt = Config.conn.createStatement();
+            resultSet = stmt.executeQuery(queryJadwal);
+            int i = 1;
+                while(resultSet.next()){
+                    String nis = resultSet.getString("nis");
+                    String kd_mapel = resultSet.getString("kd_mapel");
+                    String tahun_akademik = resultSet.getString("tahun_akademik");
+                    String semester = resultSet.getString("semester");
+                    String nilai   = resultSet.getString("nilai");
+                    String columns[] = { String.valueOf(i++), nis, kd_mapel, tahun_akademik, semester, nilai };
+
+                    DefaultTableModel tblModel = (DefaultTableModel)tbl_rapot.getModel();
+                    tblModel.addRow(columns);     
+                }            
+        }catch(SQLException e){
+            System.out.println("Masalah Terdapat pada QUERY / WEB SERVER");
+        }
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -212,21 +317,20 @@ public class rapot extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new rapot().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new rapot().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_edit;
+    private javax.swing.JButton btnCetak;
     private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_kembali;
     private javax.swing.JButton btn_tambah;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbl_murid;
     private javax.swing.JPanel pnl_murid;
+    private javax.swing.JButton showData;
     private javax.swing.JSeparator sp_pembatas;
     private javax.swing.JTable tbl_rapot;
     // End of variables declaration//GEN-END:variables
