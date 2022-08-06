@@ -60,7 +60,7 @@
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="btn_tambah" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btn_edit1" min="-2" pref="150" max="-2" attributes="0"/>
+                                      <Component id="btnView" min="-2" pref="150" max="-2" attributes="0"/>
                                       <EmptySpace max="32767" attributes="0"/>
                                       <Component id="btn_edit" min="-2" pref="150" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -88,7 +88,7 @@
                       <Component id="btn_edit" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
                       <Component id="btn_tambah" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
                       <Component id="btn_hapus" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
-                      <Component id="btn_edit1" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
+                      <Component id="btnView" alignment="3" min="-2" pref="60" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="290" max="-2" attributes="0"/>
@@ -238,7 +238,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_kembaliActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btn_edit1">
+        <Component class="javax.swing.JButton" name="btnView">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="50" green="af" red="4c" type="rgb"/>
@@ -252,7 +252,7 @@
             <Property name="text" type="java.lang.String" value="Show Data"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_edit1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

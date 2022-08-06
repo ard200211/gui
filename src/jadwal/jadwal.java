@@ -45,7 +45,7 @@ public class jadwal extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_jadwal = new javax.swing.JTable();
         btn_kembali = new javax.swing.JButton();
-        btn_edit1 = new javax.swing.JButton();
+        btnView = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -109,13 +109,13 @@ public class jadwal extends javax.swing.JFrame {
             }
         });
 
-        btn_edit1.setBackground(new java.awt.Color(76, 175, 80));
-        btn_edit1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        btn_edit1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_edit.png"))); // NOI18N
-        btn_edit1.setText("Show Data");
-        btn_edit1.addActionListener(new java.awt.event.ActionListener() {
+        btnView.setBackground(new java.awt.Color(76, 175, 80));
+        btnView.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        btnView.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/img/ic_edit.png"))); // NOI18N
+        btnView.setText("Show Data");
+        btnView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_edit1ActionPerformed(evt);
+                btnViewActionPerformed(evt);
             }
         });
 
@@ -136,7 +136,7 @@ public class jadwal extends javax.swing.JFrame {
                                 .addGroup(pnl_jadwalLayout.createSequentialGroup()
                                     .addComponent(btn_tambah)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btn_edit1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(18, 18, 18)
@@ -157,7 +157,7 @@ public class jadwal extends javax.swing.JFrame {
                     .addComponent(btn_edit, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_tambah, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_edit1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnView, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -204,10 +204,10 @@ public class jadwal extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_btn_editActionPerformed
 
-    private void btn_edit1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_edit1ActionPerformed
+    private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
         // TODO add your handling code here:
         table();
-    }//GEN-LAST:event_btn_edit1ActionPerformed
+    }//GEN-LAST:event_btnViewActionPerformed
     public void table(){
         Config con = new Config();
         String query = "SELECT * FROM jadwal";
@@ -223,11 +223,10 @@ public class jadwal extends javax.swing.JFrame {
                 String nama_mapel = resultSet.getString("nama_mapel");
                 String hari = resultSet.getString("hari");
                 String jam = resultSet.getString("jam");
-                String columns[] = {String.valueOf(i++),kd_mapel, kd_guru, nama_mapel, hari, jam };
+                String columns[] = { String.valueOf(i++),kd_mapel, kd_guru, nama_mapel, hari, jam };
                 
                 DefaultTableModel tblModel = (DefaultTableModel)tbl_jadwal.getModel();
-                tblModel.addRow(columns);
-                
+                tblModel.addRow(columns);     
             }            
         }catch(SQLException e){
             System.out.println("Masalah Terdapat pada QUERY / WEB SERVER");
@@ -269,8 +268,8 @@ public class jadwal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnView;
     private javax.swing.JButton btn_edit;
-    private javax.swing.JButton btn_edit1;
     private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_kembali;
     private javax.swing.JButton btn_tambah;
